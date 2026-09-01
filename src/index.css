@@ -1,0 +1,161 @@
+@import "tailwindcss";
+@import "@fontsource/young-serif/400.css";
+@import "@fontsource/atkinson-hyperlegible/400.css";
+@import "@fontsource/atkinson-hyperlegible/700.css";
+
+/* Tokens. The judge and admin apps use the dark "bottle" theme; the
+   contestant form, which is embedded on someone else's site, uses paper. */
+:root {
+  --ground: #0f2e26;
+  --surface: #173b31;
+  --raised: #1e4a3d;
+  --line: #2a5546;
+  --ink: #f3e9cf;
+  --ink-2: #b4c4b4;
+  --amber: #e9a23b;
+  --amber-ink: #1c1305;
+  --cherry: #e25c6e;
+  --cherry-ink: #ffffff;
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+.theme-paper {
+  --ground: #ffffff;
+  --surface: #ffffff;
+  --raised: #f4f2ec;
+  --line: #d9d5ca;
+  --ink: #1c1b17;
+  --ink-2: #66625a;
+  --amber: #b8741a;
+  --amber-ink: #ffffff;
+  --cherry: #b93a4b;
+  --cherry-ink: #ffffff;
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-amber: var(--amber);
+  --color-amber-ink: var(--amber-ink);
+  --color-cherry: var(--cherry);
+  --color-cherry-ink: var(--cherry-ink);
+
+  --font-display: "Young Serif", Georgia, "Times New Roman", serif;
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --text-h1: 2.0625rem;
+  --text-h1--line-height: 1.12;
+  --text-h2: 1.625rem;
+  --text-h2--line-height: 1.18;
+  --text-h3: 1.3125rem;
+  --text-h3--line-height: 1.25;
+
+  --shadow-sheet: var(--shadow);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ground text-ink antialiased;
+    min-height: 100dvh;
+    overscroll-behavior-y: none;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  h1 { font-size: var(--text-h1); line-height: var(--text-h1--line-height); }
+  h2 { font-size: var(--text-h2); line-height: var(--text-h2--line-height); }
+  h3 { font-size: var(--text-h3); line-height: var(--text-h3--line-height); }
+  p { text-wrap: pretty; }
+  :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  button, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  img { display: block; }
+  ::selection { background: color-mix(in oklab, var(--amber) 60%, transparent); }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-12 select-none items-center justify-center gap-2 rounded-lg px-4 text-base font-bold leading-none;
+    transition: background-color 120ms ease, color 120ms ease, transform 80ms ease, opacity 120ms ease;
+  }
+  .btn:active:not(:disabled) { transform: scale(0.985); }
+  .btn:disabled { @apply cursor-not-allowed opacity-50; }
+  .btn-primary { @apply bg-amber text-amber-ink; }
+  .btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+  .btn-secondary { @apply border border-line bg-raised text-ink; }
+  .btn-secondary:hover:not(:disabled) { @apply bg-line; }
+  .btn-ghost { @apply text-ink; }
+  .btn-ghost:hover:not(:disabled) { @apply bg-raised; }
+  .btn-danger { @apply bg-cherry text-cherry-ink; }
+  .btn-sm { @apply min-h-9 px-3 text-sm; }
+
+  .input {
+    @apply min-h-12 w-full rounded-lg border border-line bg-ground px-3.5 text-base text-ink;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .input::placeholder { color: color-mix(in oklab, var(--ink-2) 75%, transparent); }
+  .input:focus { @apply border-amber outline-none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--amber) 30%, transparent); }
+  .input[aria-invalid="true"] { @apply border-cherry; }
+  textarea.input { @apply py-3 leading-normal; }
+  select.input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b4c4b4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.5rem;
+  }
+
+  .chip {
+    @apply inline-flex min-h-9 shrink-0 items-center rounded-full border border-line px-3.5 text-sm font-bold text-ink-2;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+  .chip[aria-pressed="true"], .chip[aria-current="true"] { @apply border-ink bg-ink text-ground; }
+
+  .panel { @apply rounded-xl border border-line bg-surface; }
+
+  .hide-scrollbar { scrollbar-width: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* One deliberate motion: a shortlist slot filling. Everything else is instant. */
+@keyframes slot-fill {
+  0% { transform: scale(0.4); opacity: 0; }
+  70% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.slot-fill { animation: slot-fill 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes sheet-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sheet-enter { animation: sheet-up 200ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
